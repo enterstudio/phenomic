@@ -14,11 +14,13 @@ const examplesFolder = __dirname + "/../examples";
 const examples = globby.sync("*/package.json", {
   cwd: examplesFolder
 });
+
+console.log("STDIO", process.env.CI ? {} : { stdio: "ignore" });
 examples.filter(example => example.match(args[0])).forEach(examplePkg => {
   const example = path.dirname(examplePkg);
   console.log("- examples/" + example);
   runCommand("npm", ["run", "build"], {
     cwd: path.join(examplesFolder, example),
-    stdio: "ignore"
+    ...(process.env.CI ? {} : { stdio: "ignore" })
   });
 });
